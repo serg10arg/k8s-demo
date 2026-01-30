@@ -1,0 +1,24 @@
+# 1. ¿QUÉ TIPO DE OBJETO ES?
+# 'kind' le dice a Kubernetes qué estamos creando. Aquí es un Pod.
+kind: Pod
+
+# 2. ¿QUÉ VERSIÓN DE LA API USAMOS?
+# 'apiVersion' define el esquema que usaremos. Para Pods, es 'v1'.
+apiVersion: v1
+
+# 3. METADATOS (ETIQUETADO E IDENTIDAD)
+# Aquí ponemos nombres y etiquetas para identificar al objeto.
+metadata:
+  name: hello-pod          # Este será el nombre único del Pod en el clúster.
+  labels:                  # Las etiquetas ayudan a organizar y filtrar (útil para Servicios luego).
+    zone: prod
+    version: v1
+
+# 4. LA ESPECIFICACIÓN (EL ESTADO DESEADO)
+# 'spec' es la sección más importante. Describe CÓMO debe ser el Pod.
+spec:
+  containers:              # Un Pod puede tener varios contenedores, esto es una lista.
+    - name: hello-ctr        # Nombre interno del contenedor.
+      image: nigelpoulton/k8sbook:1.0  # La imagen exacta que K8s descargará (pull).
+      ports:
+        - containerPort: 8080  # El puerto en el que la aplicación escucha.

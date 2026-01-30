@@ -1,0 +1,24 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: initpod
+  labels:
+    app: initializer
+spec:
+  # 1. EL GUARDIÁN (Init Container)
+  # Este bloque se ejecuta PRIMERO. Si esto no termina con éxito (exit code 0),
+  # lo de abajo nunca ocurrirá.
+  initContainers:
+    - name: init-ctr
+      image: busybox:1.28.4  # Una imagen ligera con herramientas de red.
+      # El comando es un bucle infinito: intenta buscar el servicio 'k8sbook'.
+      # Si falla, duerme 2 segundos y repite. Solo sale del bucle si nslookup tiene éxito.
+      command: ['sh', '-c', 'until nslookup k8sbook; do echo waiting for service; sleep 2; done; echo Service found!']
+
+  # 2. LA ESTRELLA (App Container)
+  # Este contenedor espera pacientemente en "cuarentena" hasta que el Init termine.
+  containers:
+    - name: web-ctr
+      image: nigelpoulton/web-app:1.0
+      ports:
+        - containerPort: 8080

@@ -1,0 +1,24 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: sidecar-pod
+spec:
+  # 1. EL SIDECAR (Auxiliar)
+  # Definimos esto bajo 'initContainers', PERO observa el restartPolicy.
+  initContainers:
+    - name: sync-ctr
+      image: busybox:1.28.4
+      # TRUCO MAESTRO: 'Always' convierte a este Init Container en un Sidecar.
+      # Kubernetes lo arrancará primero, pero NO esperará a que muera.
+      # Lo dejará corriendo junto a la app principal.
+      restartPolicy: Always
+      # Simulamos un proceso de sincronización eterno (cada 5s).
+      command: ['sh', '-c', 'while true; do echo "Sincronizando datos..."; sleep 5; done']
+
+  # 2. LA APP PRINCIPAL
+  # Esta es tu aplicación web normal.
+  containers:
+    - name: web-ctr
+      image: nginx
+      ports:
+        - containerPort: 80
