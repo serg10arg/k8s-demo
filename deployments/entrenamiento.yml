@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: webapp-training
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: web-training
+  template:
+    metadata:
+      labels:
+        app: web-training
+    spec:
+      containers:
+        - name: training-pod
+          image: nigelpoulton/k8sbook:1.0
+          ports:
+            - containerPort: 8080
