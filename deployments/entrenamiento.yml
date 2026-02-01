@@ -7,6 +7,14 @@ spec:
   selector:
     matchLabels:
       app: web-training
+  # --- CAMBIO 1: Configurar la velocidad y seguridad ---
+  minReadySeconds: 10           # Espera 10s tras crear un pod antes de seguir
+  strategy:
+    type: RollingUpdate         # Estrategia de reemplazo gradual
+    rollingUpdate:
+      maxUnavailable: 1         # Máximo 1 pod caído durante el proceso
+      maxSurge: 1               # Máximo 1 pod extra creado sobre el total
+  # -----------------------------------------------------
   template:
     metadata:
       labels:
@@ -14,6 +22,8 @@ spec:
     spec:
       containers:
         - name: training-pod
-          image: nigelpoulton/k8sbook:1.0
+          # --- CAMBIO 2: Actualizar la Imagen ---
+          image: nigelpoulton/k8sbook:2.0  # Cambiamos de 1.0 a 2.0
+          # --------------------------------------
           ports:
             - containerPort: 8080
