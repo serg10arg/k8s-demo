@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: svc-lb            # Nombre interno del servicio en el DNS del clúster
+spec:
+  type: LoadBalancer      # Solicitamos una IP pública/externa
+  ports:
+    - port: 9000            # PUERTO FRONTEND: El balanceador escuchará aquí
+      targetPort: 8080      # PUERTO BACKEND: El tráfico se enviará aquí (al contenedor)
+  selector:
+    chapter: services     # EL CRITERIO: Busca Pods con esta etiqueta
